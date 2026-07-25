@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Clash Auto Toggle</string>
+
+    <string name="enable_auto_toggle">Enable Wi-Fi auto toggle</string>
+    <string name="grant_permissions">Grant required permissions</string>
+    <string name="section_rules">Wi-Fi rules</string>
+    <string name="add_current_wifi">Add current Wi-Fi</string>
+    <string name="add_manual">Add manually</string>
+    <string name="section_default_action">Unmatched networks (incl. mobile data)</string>
+    <string name="default_keep">Leave ClashMeta unchanged</string>
+    <string name="default_enable">Start ClashMeta</string>
+    <string name="default_disable">Stop ClashMeta</string>
+    <string name="section_package">ClashMeta package name</string>
+    <string name="package_hint">com.github.metacubex.clash.meta</string>
+    <string name="save">Save</string>
+    <string name="saved">Saved</string>
+    <string name="delete">Delete</string>
+    <string name="no_rules">No rules yet, add one below.</string>
+    <string name="action_enable">Start</string>
+    <string name="action_disable">Stop</string>
+    <string name="add_rule">Add rule</string>
+    <string name="ssid_hint">Wi-Fi name (SSID)</string>
+    <string name="rule_enable_clash">Start ClashMeta on this Wi-Fi (uncheck to stop it)</string>
+    <string name="ssid_empty">Please enter a Wi-Fi name</string>
+    <string name="current_wifi_unknown">Cannot read the current Wi-Fi name, check the location permission and the Wi-Fi connection</string>
+    <string name="open_settings_failed">Unable to open the system settings page</string>
+
+    <string name="permission_location">Location permission (required to read the Wi-Fi name)</string>
+    <string name="permission_background_location">Background location permission (Allow all the time)</string>
+    <string name="permission_background_location_reason">Android requires the "Allow all the time" location permission to read the connected Wi-Fi name while the screen is off or the app is in the background. The Wi-Fi name is read once per network change and never stored or uploaded.</string>
+    <string name="permission_notification">Notification permission (foreground service notification)</string>
+    <string name="permission_overlay">Display over other apps (required to control ClashMeta from the background)</string>
+    <string name="permission_battery">Ignore battery optimizations (avoid being killed)</string>
+    <string name="permission_clash_missing">ClashMeta was not found, check the package name</string>
+    <string name="permission_all_granted">All permissions granted</string>
+    <string name="permission_missing_format">Still needed:\n· %1$s</string>
+
+    <string name="status_disabled">Auto toggle is off</string>
+    <string name="status_starting">Waiting for network events…</string>
+    <string name="status_format">Current network: %1$s\n%2$s</string>
+    <string name="status_no_action">Leaving ClashMeta unchanged as configured</string>
+    <string name="status_clash_missing">ClashMeta app not found</string>
+    <string name="status_already_on">ClashMeta is already running</string>
+    <string name="status_already_off">ClashMeta is already stopped</string>
+    <string name="status_started">Requested ClashMeta to start</string>
+    <string name="status_stopped">Requested ClashMeta to stop</string>
+    <string name="status_failed">Failed to control ClashMeta, check permissions and package name</string>
+    <string name="ssid_none">Not Wi-Fi or unknown</string>
+
+    <string name="channel_name">Service status</string>
+    <string name="channel_description">Ongoing notification required to watch Wi-Fi changes</string>
+
+    <string name="help_text">How it works: the app registers a system network callback (event driven, no polling and no wake locks). It is woken once when Wi-Fi connects or disconnects and then uses the ClashMeta external control interface (START_CLASH / STOP_CLASH). No intent is sent when the state does not change, so battery usage stays minimal.</string>
+</resources>

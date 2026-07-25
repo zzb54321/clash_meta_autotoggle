@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Clash 自动切换</string>
+
+    <string name="enable_auto_toggle">启用 WiFi 自动切换</string>
+    <string name="grant_permissions">授予所需权限</string>
+    <string name="section_rules">WiFi 规则</string>
+    <string name="add_current_wifi">添加当前 WiFi</string>
+    <string name="add_manual">手动添加</string>
+    <string name="section_default_action">未匹配的网络（含移动数据）</string>
+    <string name="default_keep">不改变 ClashMeta 状态</string>
+    <string name="default_enable">启用 ClashMeta</string>
+    <string name="default_disable">停用 ClashMeta</string>
+    <string name="section_package">ClashMeta 包名</string>
+    <string name="package_hint">com.github.metacubex.clash.meta</string>
+    <string name="save">保存</string>
+    <string name="saved">已保存</string>
+    <string name="delete">删除</string>
+    <string name="no_rules">还没有规则，点击下方按钮添加。</string>
+    <string name="action_enable">启用</string>
+    <string name="action_disable">停用</string>
+    <string name="add_rule">添加规则</string>
+    <string name="ssid_hint">WiFi 名称（SSID）</string>
+    <string name="rule_enable_clash">连接该 WiFi 时启用 ClashMeta（取消勾选则停用）</string>
+    <string name="ssid_empty">请输入 WiFi 名称</string>
+    <string name="current_wifi_unknown">无法读取当前 WiFi 名称，请检查位置权限并确认已连接 WiFi</string>
+    <string name="open_settings_failed">无法打开系统设置页面</string>
+
+    <string name="permission_location">位置权限（读取 WiFi 名称必需）</string>
+    <string name="permission_background_location">后台位置权限（始终允许）</string>
+    <string name="permission_background_location_reason">Android 要求“始终允许”位置权限，应用才能在锁屏或后台时读取当前连接的 WiFi 名称。本应用只在网络变化时读取一次 WiFi 名称，不会记录或上传任何位置信息。</string>
+    <string name="permission_notification">通知权限（前台服务通知）</string>
+    <string name="permission_overlay">显示在其他应用上层（后台启动 ClashMeta 必需）</string>
+    <string name="permission_battery">忽略电池优化（避免被系统杀死）</string>
+    <string name="permission_clash_missing">未检测到 ClashMeta，请确认包名是否正确</string>
+    <string name="permission_all_granted">所有权限已就绪</string>
+    <string name="permission_missing_format">还需要：\n· %1$s</string>
+
+    <string name="status_disabled">自动切换已关闭</string>
+    <string name="status_starting">正在等待网络事件…</string>
+    <string name="status_format">当前网络：%1$s\n%2$s</string>
+    <string name="status_no_action">按配置不改变 ClashMeta 状态</string>
+    <string name="status_clash_missing">未找到 ClashMeta 应用</string>
+    <string name="status_already_on">ClashMeta 已在运行</string>
+    <string name="status_already_off">ClashMeta 已停止</string>
+    <string name="status_started">已请求启动 ClashMeta</string>
+    <string name="status_stopped">已请求停止 ClashMeta</string>
+    <string name="status_failed">控制 ClashMeta 失败，请检查权限与包名</string>
+    <string name="ssid_none">非 WiFi 或未知</string>
+
+    <string name="channel_name">运行状态</string>
+    <string name="channel_description">保持 WiFi 监听所需的常驻通知</string>
+
+    <string name="help_text">工作原理：应用注册系统网络回调（事件驱动，不轮询、不使用唤醒锁），仅在 WiFi 连接或断开时被唤醒一次，然后通过 ClashMeta 的外部控制接口（START_CLASH / STOP_CLASH）启动或停止代理；状态未变化时不会发送任何指令，因此耗电极低。</string>
+</resources>
