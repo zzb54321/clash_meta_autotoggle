@@ -50,10 +50,19 @@
     <string name="status_started">Requested ClashMeta to start</string>
     <string name="status_stopped">Requested ClashMeta to stop</string>
     <string name="status_failed">Failed to control ClashMeta, check permissions and package name</string>
+    <string name="status_not_applied">The command was sent but had no effect, see the log below</string>
     <string name="ssid_none">Not Wi-Fi or unknown</string>
 
     <string name="channel_name">Service status</string>
     <string name="channel_description">Ongoing notification required to watch Wi-Fi changes</string>
+
+    <string name="section_log">Log (for troubleshooting)</string>
+    <string name="log_empty">No log entries yet.</string>
+    <string name="log_refresh">Refresh</string>
+    <string name="log_copy">Copy</string>
+    <string name="log_clear">Clear</string>
+    <string name="log_copied">Log copied to the clipboard</string>
+    <string name="log_cleared">Log cleared</string>
 
     <string name="help_text">How it works: the app registers a system network callback (event driven, no polling and no wake locks). It is woken once when Wi-Fi connects or disconnects and then uses the external control interface of the selected client (CMFA: START_CLASH / STOP_CLASH, FlClash: START / STOP). No intent is sent when the state does not change, so battery usage stays minimal.</string>
 </resources>

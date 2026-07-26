@@ -50,10 +50,19 @@
     <string name="status_started">已请求启动 ClashMeta</string>
     <string name="status_stopped">已请求停止 ClashMeta</string>
     <string name="status_failed">控制 ClashMeta 失败，请检查权限与包名</string>
+    <string name="status_not_applied">指令已发送但未生效，请查看下方日志</string>
     <string name="ssid_none">非 WiFi 或未知</string>
 
     <string name="channel_name">运行状态</string>
     <string name="channel_description">保持 WiFi 监听所需的常驻通知</string>
+
+    <string name="section_log">运行日志（排查问题用）</string>
+    <string name="log_empty">暂无日志。</string>
+    <string name="log_refresh">刷新</string>
+    <string name="log_copy">复制</string>
+    <string name="log_clear">清空</string>
+    <string name="log_copied">日志已复制到剪贴板</string>
+    <string name="log_cleared">日志已清空</string>
 
     <string name="help_text">工作原理：应用注册系统网络回调（事件驱动，不轮询、不使用唤醒锁），仅在 WiFi 连接或断开时被唤醒一次，然后通过所选客户端的外部控制接口（CMFA：START_CLASH / STOP_CLASH；FlClash：START / STOP）启动或停止代理；状态未变化时不会发送任何指令，因此耗电极低。</string>
 </resources>

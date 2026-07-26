@@ -2,7 +2,7 @@
 
 根据当前连接的 WiFi 自动启用 / 停用 [ClashMetaForAndroid](https://github.com/MetaCubeX/ClashMetaForAndroid)（CMFA）或 [FlClash](https://github.com/chen08209/FlClash) 的安卓小工具，实现上以省电为第一目标。
 
-当前版本：**v1.1.0**（APK 固定为 `apk/clash_meta_autotoggle.apk`，文件名不带版本号）
+当前版本：**v1.2.0**（APK 固定为 `apk/clash_meta_autotoggle.apk`，文件名不带版本号）
 
 ## 功能
 
@@ -33,12 +33,21 @@ FlClash：`TempActivity`
 
 > FlClash 的外部控制要求其中已经保存过可用配置并授予过 VPN 权限，否则后台启动会静默失败（首次请手动启动一次 FlClash）。
 
+意图带有 `FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_MULTIPLE_TASK | FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | FLAG_ACTIVITY_NO_USER_ACTION | FLAG_ACTIVITY_NO_ANIMATION`。其中 `MULTIPLE_TASK` 很关键：若不加，`NEW_TASK` 会复用客户端已存在的任务栈，从而把 FlClash / CMFA 的主界面带到前台；加上之后控制 Activity 会在独立任务中运行，切换全程无界面（CMFA 自身仍会弹出一条 Toast 提示，这是其自带行为，无法从外部关闭）。
+
+Android 10 起禁止应用在后台启动 Activity，被拦截时系统不会抛异常，只会静默丢弃。因此在发送意图前后，应用会借助「显示在其他应用上层」权限临时挂起一个 1x1 的透明悬浮窗（1 秒后移除），以满足系统的后台启动豁免条件；并在 6 秒后校验 VPN 通道状态，确认指令是否真的生效，未生效时会记入日志并清除“上次下发状态”，以便下次网络事件重试。
+
+## 日志
+
+首页底部提供「运行日志」区域，记录网络事件、判定过程、下发的 Action、目标组件以及生效校验结果，可刷新 / 复制 / 清空，最多保留 300 条并持久化保存（进程被杀后仍在）。同样的内容会输出到 logcat，可用 `adb logcat -s ClashAutoToggle` 查看。
+
 ## 省电设计
 
 - **事件驱动，不轮询**：使用 `ConnectivityManager.registerNetworkCallback` 监听 WiFi 传输通道，系统只在 WiFi 连接 / 断开 / 能力变化时唤醒本进程，平时进程完全空闲。
 - **不使用唤醒锁**，不使用周期性定时任务（`AlarmManager` / `JobScheduler`），不做后台扫描。
 - **事件去抖**：网络切换时系统会连发多个回调，应用合并 2 秒内的事件，只判断一次。
 - **状态去重**：仅在目标状态与当前状态不一致时才发送意图（结合“上次下发的状态”与系统 VPN 通道是否存在判断），避免反复唤醒 ClashMeta。
+- 除 WiFi 传输通道外，还额外监听“默认网络”回调，避免部分 ROM 上 WiFi 断开事件延迟送达；两者共用同一套去抖与去重逻辑，不增加额外唤醒。
 - **零依赖**：只使用 Android 框架 API，不引入任何第三方库，APK 约 40 KB。
 - 关闭总开关时会停止前台服务，完全不占用后台资源。
 
@@ -78,5 +87,6 @@ FlClash：`TempActivity`
 
 ## 版本记录
 
+- **v1.2.0**：新增应用内运行日志（可刷新 / 复制 / 清空，同时输出到 logcat，tag 为 `ClashAutoToggle`）；修复后台（尤其是断开 WiFi 时）指令被系统拦截导致不切换的问题；切换时不再把客户端界面带到前台；下发指令后会校验是否真正生效。
 - **v1.1.0**：新增对 FlClash 的支持，客户端选项改为 CMFA / FlClash / 自定义三选一；修复标题栏遮挡界面的问题；发布的 APK 文件名不再包含版本号。
 - **v1.0.0**：首个版本。WiFi 规则、默认动作、开机自启、省电的事件驱动监听、权限引导。

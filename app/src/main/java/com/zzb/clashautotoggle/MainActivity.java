@@ -3,6 +3,8 @@ package com.zzb.clashautotoggle;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -40,6 +42,7 @@ public class MainActivity extends Activity implements MonitorService.StatusListe
     private RadioGroup defaultActionGroup;
     private RadioGroup clientGroup;
     private EditText packageInput;
+    private TextView logView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,7 @@ public class MainActivity extends Activity implements MonitorService.StatusListe
         defaultActionGroup = findViewById(R.id.group_default_action);
         clientGroup = findViewById(R.id.group_client);
         packageInput = findViewById(R.id.input_package);
+        logView = findViewById(R.id.text_log);
 
         enabledSwitch.setChecked(settings.isEnabled());
         enabledSwitch.setOnCheckedChangeListener((button, checked) -> onEnabledChanged(checked));
@@ -102,6 +106,34 @@ public class MainActivity extends Activity implements MonitorService.StatusListe
         findViewById(R.id.button_add_current).setOnClickListener(v -> addCurrentWifi());
         findViewById(R.id.button_add_manual).setOnClickListener(v -> showAddDialog(null));
         findViewById(R.id.button_permissions).setOnClickListener(v -> requestNextPermission());
+
+        findViewById(R.id.button_log_refresh).setOnClickListener(v -> renderLog());
+        findViewById(R.id.button_log_copy).setOnClickListener(v -> copyLog());
+        findViewById(R.id.button_log_clear).setOnClickListener(v -> {
+            AppLog.clear(this);
+            renderLog();
+            toast(getString(R.string.log_cleared));
+        });
+    }
+
+    private void renderLog() {
+        String log = AppLog.read(this);
+        logView.setText(TextUtils.isEmpty(log) ? getString(R.string.log_empty) : log);
+    }
+
+    private void copyLog() {
+        String log = AppLog.read(this);
+        if (TextUtils.isEmpty(log)) {
+            toast(getString(R.string.log_empty));
+            return;
+        }
+        ClipboardManager clipboard =
+                (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        if (clipboard == null) {
+            return;
+        }
+        clipboard.setPrimaryClip(ClipData.newPlainText(getString(R.string.section_log), log));
+        toast(getString(R.string.log_copied));
     }
 
     @Override
@@ -115,6 +147,7 @@ public class MainActivity extends Activity implements MonitorService.StatusListe
         super.onResume();
         renderRules();
         refreshStatus();
+        renderLog();
     }
 
     @Override
@@ -126,10 +159,12 @@ public class MainActivity extends Activity implements MonitorService.StatusListe
     @Override
     public void onStatusChanged() {
         refreshStatus();
+        renderLog();
     }
 
     private void onEnabledChanged(boolean checked) {
         settings.setEnabled(checked);
+        AppLog.i(this, "用户" + (checked ? "开启" : "关闭") + "了自动切换");
         if (checked) {
             if (!hasLocationPermission()) {
                 requestNextPermission();
