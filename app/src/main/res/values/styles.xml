@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- No action bar: the framework title bar is drawn on top of the content
+         under the Android 15 edge-to-edge enforcement, so the app draws its own
+         title inside the scroll view and pads for the system bars instead. -->
+    <style name="AppTheme" parent="@android:style/Theme.DeviceDefault.Light.NoActionBar" />
+</resources>
