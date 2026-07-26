@@ -22,13 +22,21 @@ public final class Settings {
     /** Stop ClashMeta. */
     public static final int ACTION_DISABLE = 2;
 
+    /** ClashMetaForAndroid (CMFA) and compatible forks. */
+    public static final int CLIENT_CMFA = 0;
+    /** FlClash (https://github.com/chen08209/FlClash). */
+    public static final int CLIENT_FLCLASH = 1;
+
     public static final String DEFAULT_CLASH_PACKAGE = "com.github.metacubex.clash.meta";
+    public static final String DEFAULT_FLCLASH_PACKAGE = "com.follow.clash";
 
     private static final String PREFS = "settings";
     private static final String KEY_ENABLED = "enabled";
     private static final String KEY_RULES = "rules";
     private static final String KEY_DEFAULT_ACTION = "default_action";
     private static final String KEY_CLASH_PACKAGE = "clash_package";
+    private static final String KEY_FLCLASH_PACKAGE = "flclash_package";
+    private static final String KEY_CLIENT_TYPE = "client_type";
     private static final String KEY_LAST_APPLIED = "last_applied";
 
     private final SharedPreferences prefs;
@@ -54,13 +62,47 @@ public final class Settings {
         prefs.edit().putInt(KEY_DEFAULT_ACTION, action).apply();
     }
 
-    public String getClashPackage() {
-        String value = prefs.getString(KEY_CLASH_PACKAGE, DEFAULT_CLASH_PACKAGE);
-        return value == null || value.trim().isEmpty() ? DEFAULT_CLASH_PACKAGE : value.trim();
+    /**
+     * @return {@link #CLIENT_CMFA} or {@link #CLIENT_FLCLASH}.
+     */
+    public int getClientType() {
+        int value = prefs.getInt(KEY_CLIENT_TYPE, CLIENT_CMFA);
+        return value == CLIENT_FLCLASH ? CLIENT_FLCLASH : CLIENT_CMFA;
     }
 
+    public void setClientType(int clientType) {
+        if (clientType == getClientType()) {
+            return;
+        }
+        // The other client is a different app: the remembered state no longer
+        // describes it, so force a fresh evaluation.
+        prefs.edit()
+                .putInt(KEY_CLIENT_TYPE, clientType == CLIENT_FLCLASH ? CLIENT_FLCLASH : CLIENT_CMFA)
+                .putInt(KEY_LAST_APPLIED, ACTION_KEEP)
+                .apply();
+    }
+
+    public static String getDefaultPackage(int clientType) {
+        return clientType == CLIENT_FLCLASH ? DEFAULT_FLCLASH_PACKAGE : DEFAULT_CLASH_PACKAGE;
+    }
+
+    /**
+     * @return the package name of the currently selected client.
+     */
+    public String getClashPackage() {
+        int clientType = getClientType();
+        String fallback = getDefaultPackage(clientType);
+        String value = prefs.getString(packageKey(clientType), fallback);
+        return value == null || value.trim().isEmpty() ? fallback : value.trim();
+    }
+
+    /** Stores the package name of the currently selected client. */
     public void setClashPackage(String packageName) {
-        prefs.edit().putString(KEY_CLASH_PACKAGE, packageName).apply();
+        prefs.edit().putString(packageKey(getClientType()), packageName).apply();
+    }
+
+    private static String packageKey(int clientType) {
+        return clientType == CLIENT_FLCLASH ? KEY_FLCLASH_PACKAGE : KEY_CLASH_PACKAGE;
     }
 
     /**

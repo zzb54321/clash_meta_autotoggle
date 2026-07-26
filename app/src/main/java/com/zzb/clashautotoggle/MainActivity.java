@@ -38,6 +38,7 @@ public class MainActivity extends Activity implements MonitorService.StatusListe
     private TextView permissionView;
     private LinearLayout rulesContainer;
     private RadioGroup defaultActionGroup;
+    private RadioGroup clientGroup;
     private EditText packageInput;
 
     @Override
@@ -52,6 +53,7 @@ public class MainActivity extends Activity implements MonitorService.StatusListe
         permissionView = findViewById(R.id.text_permissions);
         rulesContainer = findViewById(R.id.container_rules);
         defaultActionGroup = findViewById(R.id.group_default_action);
+        clientGroup = findViewById(R.id.group_client);
         packageInput = findViewById(R.id.input_package);
 
         enabledSwitch.setChecked(settings.isEnabled());
@@ -79,11 +81,22 @@ public class MainActivity extends Activity implements MonitorService.StatusListe
             reapply();
         });
 
-        packageInput.setText(settings.getClashPackage());
+        clientGroup.check(settings.getClientType() == Settings.CLIENT_FLCLASH
+                ? R.id.radio_client_flclash : R.id.radio_client_cmfa);
+        clientGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            settings.setClientType(checkedId == R.id.radio_client_flclash
+                    ? Settings.CLIENT_FLCLASH : Settings.CLIENT_CMFA);
+            renderClientPackage();
+            refreshStatus();
+            reapply();
+        });
+
+        renderClientPackage();
         findViewById(R.id.button_save_package).setOnClickListener(v -> {
             String value = packageInput.getText().toString().trim();
-            settings.setClashPackage(value.isEmpty() ? Settings.DEFAULT_CLASH_PACKAGE : value);
-            packageInput.setText(settings.getClashPackage());
+            settings.setClashPackage(value.isEmpty()
+                    ? Settings.getDefaultPackage(settings.getClientType()) : value);
+            renderClientPackage();
             toast(getString(R.string.saved));
             reapply();
         });
@@ -128,6 +141,11 @@ public class MainActivity extends Activity implements MonitorService.StatusListe
             MonitorService.stop(this);
         }
         refreshStatus();
+    }
+
+    private void renderClientPackage() {
+        packageInput.setHint(Settings.getDefaultPackage(settings.getClientType()));
+        packageInput.setText(settings.getClashPackage());
     }
 
     private void reapply() {

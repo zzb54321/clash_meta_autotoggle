@@ -11,16 +11,18 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <!-- Required to be able to hand the START_CLASH / STOP_CLASH intent to
-         ClashMetaForAndroid while this app is in the background. -->
+    <!-- Required to be able to hand the start / stop intent to the Clash
+         client (CMFA or FlClash) while this app is in the background. -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-    <!-- Package visibility for Android 11+ so the ClashMetaForAndroid external
-         control activity can be resolved. -->
+    <!-- Package visibility for Android 11+ so the external control activity of
+         the supported clients can be resolved. -->
     <queries>
         <package android:name="com.github.metacubex.clash.meta" />
         <package android:name="com.github.metacubex.clash.meta.alpha" />
         <package android:name="com.github.kr328.clash" />
+        <package android:name="com.follow.clash" />
+        <package android:name="com.follow.clash.dev" />
     </queries>
 
     <application

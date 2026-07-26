@@ -184,7 +184,8 @@ public class MonitorService extends Service {
                 detail = wantRunning
                         ? getString(R.string.status_already_on)
                         : getString(R.string.status_already_off);
-            } else if (ClashController.apply(this, packageName, wantRunning)) {
+            } else if (ClashController.apply(this, packageName, settings.getClientType(),
+                    wantRunning)) {
                 settings.setLastApplied(action);
                 detail = wantRunning
                         ? getString(R.string.status_started)

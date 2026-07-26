@@ -11,7 +11,10 @@
     <string name="default_keep">不改变 ClashMeta 状态</string>
     <string name="default_enable">启用 ClashMeta</string>
     <string name="default_disable">停用 ClashMeta</string>
-    <string name="section_package">ClashMeta 包名</string>
+    <string name="section_client">Clash 客户端</string>
+    <string name="client_cmfa">ClashMetaForAndroid（CMFA）</string>
+    <string name="client_flclash">FlClash</string>
+    <string name="section_package">客户端包名</string>
     <string name="package_hint">com.github.metacubex.clash.meta</string>
     <string name="save">保存</string>
     <string name="saved">已保存</string>
@@ -32,7 +35,7 @@
     <string name="permission_notification">通知权限（前台服务通知）</string>
     <string name="permission_overlay">显示在其他应用上层（后台启动 ClashMeta 必需）</string>
     <string name="permission_battery">忽略电池优化（避免被系统杀死）</string>
-    <string name="permission_clash_missing">未检测到 ClashMeta，请确认包名是否正确</string>
+    <string name="permission_clash_missing">未检测到所选的 Clash 客户端，请确认包名是否正确</string>
     <string name="permission_all_granted">所有权限已就绪</string>
     <string name="permission_missing_format">还需要：\n· %1$s</string>
 
@@ -40,7 +43,7 @@
     <string name="status_starting">正在等待网络事件…</string>
     <string name="status_format">当前网络：%1$s\n%2$s</string>
     <string name="status_no_action">按配置不改变 ClashMeta 状态</string>
-    <string name="status_clash_missing">未找到 ClashMeta 应用</string>
+    <string name="status_clash_missing">未找到所选的 Clash 客户端</string>
     <string name="status_already_on">ClashMeta 已在运行</string>
     <string name="status_already_off">ClashMeta 已停止</string>
     <string name="status_started">已请求启动 ClashMeta</string>
@@ -51,5 +54,5 @@
     <string name="channel_name">运行状态</string>
     <string name="channel_description">保持 WiFi 监听所需的常驻通知</string>
 
-    <string name="help_text">工作原理：应用注册系统网络回调（事件驱动，不轮询、不使用唤醒锁），仅在 WiFi 连接或断开时被唤醒一次，然后通过 ClashMeta 的外部控制接口（START_CLASH / STOP_CLASH）启动或停止代理；状态未变化时不会发送任何指令，因此耗电极低。</string>
+    <string name="help_text">工作原理：应用注册系统网络回调（事件驱动，不轮询、不使用唤醒锁），仅在 WiFi 连接或断开时被唤醒一次，然后通过所选客户端的外部控制接口（CMFA：START_CLASH / STOP_CLASH；FlClash：START / STOP）启动或停止代理；状态未变化时不会发送任何指令，因此耗电极低。</string>
 </resources>

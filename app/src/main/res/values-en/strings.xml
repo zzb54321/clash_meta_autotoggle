@@ -11,7 +11,10 @@
     <string name="default_keep">Leave ClashMeta unchanged</string>
     <string name="default_enable">Start ClashMeta</string>
     <string name="default_disable">Stop ClashMeta</string>
-    <string name="section_package">ClashMeta package name</string>
+    <string name="section_client">Clash client</string>
+    <string name="client_cmfa">ClashMetaForAndroid (CMFA)</string>
+    <string name="client_flclash">FlClash</string>
+    <string name="section_package">Client package name</string>
     <string name="package_hint">com.github.metacubex.clash.meta</string>
     <string name="save">Save</string>
     <string name="saved">Saved</string>
@@ -32,7 +35,7 @@
     <string name="permission_notification">Notification permission (foreground service notification)</string>
     <string name="permission_overlay">Display over other apps (required to control ClashMeta from the background)</string>
     <string name="permission_battery">Ignore battery optimizations (avoid being killed)</string>
-    <string name="permission_clash_missing">ClashMeta was not found, check the package name</string>
+    <string name="permission_clash_missing">The selected Clash client was not found, check the package name</string>
     <string name="permission_all_granted">All permissions granted</string>
     <string name="permission_missing_format">Still needed:\n· %1$s</string>
 
@@ -40,7 +43,7 @@
     <string name="status_starting">Waiting for network events…</string>
     <string name="status_format">Current network: %1$s\n%2$s</string>
     <string name="status_no_action">Leaving ClashMeta unchanged as configured</string>
-    <string name="status_clash_missing">ClashMeta app not found</string>
+    <string name="status_clash_missing">The selected Clash client was not found</string>
     <string name="status_already_on">ClashMeta is already running</string>
     <string name="status_already_off">ClashMeta is already stopped</string>
     <string name="status_started">Requested ClashMeta to start</string>
@@ -51,5 +54,5 @@
     <string name="channel_name">Service status</string>
     <string name="channel_description">Ongoing notification required to watch Wi-Fi changes</string>
 
-    <string name="help_text">How it works: the app registers a system network callback (event driven, no polling and no wake locks). It is woken once when Wi-Fi connects or disconnects and then uses the ClashMeta external control interface (START_CLASH / STOP_CLASH). No intent is sent when the state does not change, so battery usage stays minimal.</string>
+    <string name="help_text">How it works: the app registers a system network callback (event driven, no polling and no wake locks). It is woken once when Wi-Fi connects or disconnects and then uses the external control interface of the selected client (CMFA: START_CLASH / STOP_CLASH, FlClash: START / STOP). No intent is sent when the state does not change, so battery usage stays minimal.</string>
 </resources>

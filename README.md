@@ -1,26 +1,35 @@
 # clash_meta_autotoggle
 
-根据当前连接的 WiFi 自动启用 / 停用 [ClashMetaForAndroid](https://github.com/MetaCubeX/ClashMetaForAndroid)（CMFA）的安卓小工具，实现上以省电为第一目标。
+根据当前连接的 WiFi 自动启用 / 停用 [ClashMetaForAndroid](https://github.com/MetaCubeX/ClashMetaForAndroid)（CMFA）或 [FlClash](https://github.com/chen08209/FlClash) 的安卓小工具，实现上以省电为第一目标。
 
 当前版本：**v1.0.0**（`apk/clash_meta_autotoggle-v1.0.0.apk`）
 
 ## 功能
 
-- 为每个 WiFi 名称（SSID）配置一条规则：连上该 WiFi 时**启用**或**停用** ClashMeta。
+- 支持两种客户端：**ClashMetaForAndroid（CMFA）** 与 **FlClash**，可在首页切换（两者的包名分别独立保存）。
+- 为每个 WiFi 名称（SSID）配置一条规则：连上该 WiFi 时**启用**或**停用**所选客户端。
 - 未匹配的网络（其他 WiFi、移动数据、无网络）可选择：不改变状态 / 启用 / 停用。
 - 一键添加当前连接的 WiFi，或手动输入 SSID。
-- 支持自定义 ClashMeta 包名（默认 `com.github.metacubex.clash.meta`，可改为 alpha 版等）。
+- 支持自定义包名（CMFA 默认 `com.github.metacubex.clash.meta`，可改为 alpha 版等；FlClash 默认 `com.follow.clash`，debug 版为 `com.follow.clash.dev`）。
 - 开机、应用更新后自动恢复监听。
 
 ## 工作原理
 
-ClashMetaForAndroid 提供了外部控制入口 `ExternalControlActivity`，接受以下 Action：
+两种客户端都提供了外部控制入口（一个透明的 Activity），本应用在网络变化时向其发送启动 / 停止意图。
+
+ClashMetaForAndroid：`ExternalControlActivity`
 
 - `com.github.metacubex.clash.meta.action.START_CLASH`
 - `com.github.metacubex.clash.meta.action.STOP_CLASH`
 - `com.github.metacubex.clash.meta.action.TOGGLE_CLASH`
 
-本应用在网络变化时向该 Activity 发送 START / STOP 意图，从而启动或停止代理。
+FlClash：`TempActivity`
+
+- `com.follow.clash.action.START`
+- `com.follow.clash.action.STOP`
+- `com.follow.clash.action.TOGGLE`
+
+> FlClash 的外部控制要求其中已经保存过可用配置并授予过 VPN 权限，否则后台启动会静默失败（首次请手动启动一次 FlClash）。
 
 ## 省电设计
 
@@ -37,7 +46,7 @@ ClashMetaForAndroid 提供了外部控制入口 `ExternalControlActivity`，接�
 | --- | --- |
 | 位置权限（精确 + 后台“始终允许”） | Android 10 起，读取当前 WiFi 的 SSID 必须拥有位置权限；后台权限用于锁屏 / 后台时判断 WiFi。应用只在网络变化时读取一次 SSID，不存储、不上传任何位置信息。 |
 | 通知权限 | 前台服务的常驻通知（重要性最低，可折叠隐藏）。 |
-| 显示在其他应用上层 | Android 10 起禁止后台启动 Activity，而 CMFA 的外部控制入口是 Activity，因此需要该权限才能在后台切换 ClashMeta。 |
+| 显示在其他应用上层 | Android 10 起禁止后台启动 Activity，而 CMFA / FlClash 的外部控制入口都是 Activity，因此需要该权限才能在后台切换客户端。 |
 | 忽略电池优化（可选） | 避免监听服务被系统冻结导致切换不及时。 |
 | 开机自启 | 重启后恢复监听。 |
 
@@ -45,13 +54,13 @@ ClashMetaForAndroid 提供了外部控制入口 `ExternalControlActivity`，接�
 
 ## 使用步骤
 
-1. 安装 `apk/` 目录下的 APK，并确保已安装 ClashMeta（CMFA）且已导入可用配置。
-2. 打开本应用，点击「授予所需权限」，逐项完成授权。
+1. 安装 `apk/` 目录下的 APK，并确保已安装 ClashMeta（CMFA）或 FlClash 且已导入可用配置。
+2. 打开本应用，点击「授予所需权限」，逐项完成授权，并在「Clash 客户端」处选择要控制的客户端。
 3. 连接到目标 WiFi，点击「添加当前 WiFi」，选择该 WiFi 下是启用还是停用 ClashMeta。
 4. 设置「未匹配的网络」的默认动作。
 5. 打开顶部「启用 WiFi 自动切换」开关。
 
-> 首次启动 ClashMeta 时系统会弹出 VPN 授权对话框，需要手动确认一次（Android 的强制要求）。之后即可全自动切换。
+> 首次启动客户端时系统会弹出 VPN 授权对话框，需要手动确认一次（Android 的强制要求）。之后即可全自动切换。
 
 ## 编译
 
@@ -65,4 +74,5 @@ ClashMetaForAndroid 提供了外部控制入口 `ExternalControlActivity`，接�
 
 ## 版本记录
 
+- **未发布**：新增对 FlClash 的支持（可在 CMFA 与 FlClash 之间切换）。
 - **v1.0.0**：首个版本。WiFi 规则、默认动作、开机自启、省电的事件驱动监听、权限引导。
