@@ -35,6 +35,8 @@ FlClash：`TempActivity`
 
 意图带有 `FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_MULTIPLE_TASK | FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | FLAG_ACTIVITY_NO_USER_ACTION | FLAG_ACTIVITY_NO_ANIMATION`。其中 `MULTIPLE_TASK` 很关键：若不加，`NEW_TASK` 会复用客户端已存在的任务栈，从而把 FlClash / CMFA 的主界面带到前台；加上之后控制 Activity 会在独立任务中运行，切换全程无界面（CMFA 自身仍会弹出一条 Toast 提示，这是其自带行为，无法从外部关闭）。
 
+> 还有一种会看到 FlClash 界面的情况来自 FlClash 自身：当它的主界面仍存活于后台且尚未授予 VPN 权限时，它会用那个 Activity 去 `startActivityForResult` 弹出系统 VPN 授权框，从而被系统带到前台。手动启动一次 FlClash 并完成 VPN 授权后即不再出现。
+
 Android 10 起禁止应用在后台启动 Activity，被拦截时系统不会抛异常，只会静默丢弃。因此在发送意图前后，应用会借助「显示在其他应用上层」权限临时挂起一个 1x1 的透明悬浮窗（1 秒后移除），以满足系统的后台启动豁免条件；并在 6 秒后校验 VPN 通道状态，确认指令是否真的生效，未生效时会记入日志并清除“上次下发状态”，以便下次网络事件重试。
 
 ## 日志
