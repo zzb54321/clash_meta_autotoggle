@@ -14,7 +14,8 @@
     <string name="section_client">Clash client</string>
     <string name="client_cmfa">ClashMetaForAndroid (CMFA)</string>
     <string name="client_flclash">FlClash</string>
-    <string name="section_package">Client package name</string>
+    <string name="client_custom">Custom (enter the package name)</string>
+    <string name="section_package">Client package name (editable for "Custom" only)</string>
     <string name="package_hint">com.github.metacubex.clash.meta</string>
     <string name="save">Save</string>
     <string name="saved">Saved</string>

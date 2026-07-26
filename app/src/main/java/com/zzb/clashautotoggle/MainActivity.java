@@ -81,11 +81,9 @@ public class MainActivity extends Activity implements MonitorService.StatusListe
             reapply();
         });
 
-        clientGroup.check(settings.getClientType() == Settings.CLIENT_FLCLASH
-                ? R.id.radio_client_flclash : R.id.radio_client_cmfa);
+        clientGroup.check(clientRadioId(settings.getClientType()));
         clientGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            settings.setClientType(checkedId == R.id.radio_client_flclash
-                    ? Settings.CLIENT_FLCLASH : Settings.CLIENT_CMFA);
+            settings.setClientType(clientType(checkedId));
             renderClientPackage();
             refreshStatus();
             reapply();
@@ -143,9 +141,36 @@ public class MainActivity extends Activity implements MonitorService.StatusListe
         refreshStatus();
     }
 
+    private static int clientRadioId(int clientType) {
+        switch (clientType) {
+            case Settings.CLIENT_FLCLASH:
+                return R.id.radio_client_flclash;
+            case Settings.CLIENT_CUSTOM:
+                return R.id.radio_client_custom;
+            default:
+                return R.id.radio_client_cmfa;
+        }
+    }
+
+    private static int clientType(int radioId) {
+        if (radioId == R.id.radio_client_flclash) {
+            return Settings.CLIENT_FLCLASH;
+        }
+        if (radioId == R.id.radio_client_custom) {
+            return Settings.CLIENT_CUSTOM;
+        }
+        return Settings.CLIENT_CMFA;
+    }
+
     private void renderClientPackage() {
-        packageInput.setHint(Settings.getDefaultPackage(settings.getClientType()));
+        int clientType = settings.getClientType();
+        // The package name of the two known clients is fixed; only the custom
+        // client is meant to be edited by hand.
+        boolean editable = clientType == Settings.CLIENT_CUSTOM;
+        packageInput.setHint(Settings.getDefaultPackage(clientType));
         packageInput.setText(settings.getClashPackage());
+        packageInput.setEnabled(editable);
+        findViewById(R.id.button_save_package).setEnabled(editable);
     }
 
     private void reapply() {

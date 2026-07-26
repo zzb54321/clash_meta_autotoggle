@@ -2,6 +2,12 @@ plugins {
     id("com.android.application")
 }
 
+// The published APK is named after the project only, without the version, so
+// the file name in apk/ stays stable across releases.
+base {
+    archivesName = "clash_meta_autotoggle"
+}
+
 android {
     namespace = "com.zzb.clashautotoggle"
     compileSdk = 35
@@ -10,8 +16,8 @@ android {
         applicationId = "com.zzb.clashautotoggle"
         minSdk = 24
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.1.0"
     }
 
     buildTypes {

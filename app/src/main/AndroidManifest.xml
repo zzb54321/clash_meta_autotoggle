@@ -23,6 +23,12 @@
         <package android:name="com.github.kr328.clash" />
         <package android:name="com.follow.clash" />
         <package android:name="com.follow.clash.dev" />
+        <!-- Needed so a user supplied ("custom") client package stays visible
+             on Android 11+; only launchable apps are exposed this way. -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
     </queries>
 
     <application

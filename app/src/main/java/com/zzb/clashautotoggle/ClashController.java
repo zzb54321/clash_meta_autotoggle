@@ -37,12 +37,22 @@ public final class ClashController {
         }
     }
 
-    static String action(int clientType, String packageName, boolean start) {
+    /**
+     * @return the actions to try, in order of preference. A custom client may
+     *         be a fork of either app, so both conventions are candidates and
+     *         the one the package actually declares is picked at send time.
+     */
+    static String[] actions(int clientType, String packageName, boolean start) {
+        String cmfa = packageName + (start ? ACTION_START_SUFFIX : ACTION_STOP_SUFFIX);
+        String flClash =
+                packageName + (start ? FLCLASH_ACTION_START_SUFFIX : FLCLASH_ACTION_STOP_SUFFIX);
         if (clientType == Settings.CLIENT_FLCLASH) {
-            return packageName
-                    + (start ? FLCLASH_ACTION_START_SUFFIX : FLCLASH_ACTION_STOP_SUFFIX);
+            return new String[]{flClash};
         }
-        return packageName + (start ? ACTION_START_SUFFIX : ACTION_STOP_SUFFIX);
+        if (clientType == Settings.CLIENT_CUSTOM) {
+            return new String[]{cmfa, flClash};
+        }
+        return new String[]{cmfa};
     }
 
     /**
@@ -50,11 +60,18 @@ public final class ClashController {
      */
     public static boolean apply(Context context, String packageName, int clientType,
                                 boolean start) {
-        Intent intent = new Intent(action(clientType, packageName, start));
-        intent.setPackage(packageName);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
-                | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        String[] candidates = actions(clientType, packageName, start);
+        Intent intent = null;
+        for (String action : candidates) {
+            Intent candidate = buildIntent(action, packageName);
+            if (intent == null) {
+                intent = candidate;
+            }
+            if (candidate.resolveActivity(context.getPackageManager()) != null) {
+                intent = candidate;
+                break;
+            }
+        }
         try {
             context.startActivity(intent);
             return true;
@@ -64,6 +81,15 @@ public final class ClashController {
             Log.w(TAG, "Unable to control the Clash client: " + e);
             return false;
         }
+    }
+
+    private static Intent buildIntent(String action, String packageName) {
+        Intent intent = new Intent(action);
+        intent.setPackage(packageName);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+                | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        return intent;
     }
 
     /**

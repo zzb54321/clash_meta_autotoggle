@@ -26,6 +26,8 @@ public final class Settings {
     public static final int CLIENT_CMFA = 0;
     /** FlClash (https://github.com/chen08209/FlClash). */
     public static final int CLIENT_FLCLASH = 1;
+    /** Any other client / fork, identified by a user supplied package name. */
+    public static final int CLIENT_CUSTOM = 2;
 
     public static final String DEFAULT_CLASH_PACKAGE = "com.github.metacubex.clash.meta";
     public static final String DEFAULT_FLCLASH_PACKAGE = "com.follow.clash";
@@ -36,6 +38,7 @@ public final class Settings {
     private static final String KEY_DEFAULT_ACTION = "default_action";
     private static final String KEY_CLASH_PACKAGE = "clash_package";
     private static final String KEY_FLCLASH_PACKAGE = "flclash_package";
+    private static final String KEY_CUSTOM_PACKAGE = "custom_package";
     private static final String KEY_CLIENT_TYPE = "client_type";
     private static final String KEY_LAST_APPLIED = "last_applied";
 
@@ -63,25 +66,41 @@ public final class Settings {
     }
 
     /**
-     * @return {@link #CLIENT_CMFA} or {@link #CLIENT_FLCLASH}.
+     * @return {@link #CLIENT_CMFA}, {@link #CLIENT_FLCLASH} or
+     *         {@link #CLIENT_CUSTOM}.
      */
     public int getClientType() {
-        int value = prefs.getInt(KEY_CLIENT_TYPE, CLIENT_CMFA);
-        return value == CLIENT_FLCLASH ? CLIENT_FLCLASH : CLIENT_CMFA;
+        return normalizeClientType(prefs.getInt(KEY_CLIENT_TYPE, CLIENT_CMFA));
     }
 
     public void setClientType(int clientType) {
-        if (clientType == getClientType()) {
+        int normalized = normalizeClientType(clientType);
+        if (normalized == getClientType()) {
             return;
         }
         // The other client is a different app: the remembered state no longer
         // describes it, so force a fresh evaluation.
         prefs.edit()
-                .putInt(KEY_CLIENT_TYPE, clientType == CLIENT_FLCLASH ? CLIENT_FLCLASH : CLIENT_CMFA)
+                .putInt(KEY_CLIENT_TYPE, normalized)
                 .putInt(KEY_LAST_APPLIED, ACTION_KEEP)
                 .apply();
     }
 
+    private static int normalizeClientType(int clientType) {
+        switch (clientType) {
+            case CLIENT_FLCLASH:
+                return CLIENT_FLCLASH;
+            case CLIENT_CUSTOM:
+                return CLIENT_CUSTOM;
+            default:
+                return CLIENT_CMFA;
+        }
+    }
+
+    /**
+     * @return the pre-filled package name for {@code clientType}; the custom
+     *         client has no default and falls back to the CMFA package.
+     */
     public static String getDefaultPackage(int clientType) {
         return clientType == CLIENT_FLCLASH ? DEFAULT_FLCLASH_PACKAGE : DEFAULT_CLASH_PACKAGE;
     }
@@ -102,7 +121,14 @@ public final class Settings {
     }
 
     private static String packageKey(int clientType) {
-        return clientType == CLIENT_FLCLASH ? KEY_FLCLASH_PACKAGE : KEY_CLASH_PACKAGE;
+        switch (clientType) {
+            case CLIENT_FLCLASH:
+                return KEY_FLCLASH_PACKAGE;
+            case CLIENT_CUSTOM:
+                return KEY_CUSTOM_PACKAGE;
+            default:
+                return KEY_CLASH_PACKAGE;
+        }
     }
 
     /**

@@ -14,7 +14,8 @@
     <string name="section_client">Clash 客户端</string>
     <string name="client_cmfa">ClashMetaForAndroid（CMFA）</string>
     <string name="client_flclash">FlClash</string>
-    <string name="section_package">客户端包名</string>
+    <string name="client_custom">自定义（手动填写包名）</string>
+    <string name="section_package">客户端包名（仅“自定义”可编辑）</string>
     <string name="package_hint">com.github.metacubex.clash.meta</string>
     <string name="save">保存</string>
     <string name="saved">已保存</string>
