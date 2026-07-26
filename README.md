@@ -74,6 +74,8 @@ FlClash：`TempActivity`
 
 仓库 `apk/` 目录中的 APK 使用标准 Android 调试签名（debug keystore）签名，方便直接安装；如需自己的签名请自行配置 `signingConfigs`。
 
+> 由于调试签名的密钥在不同编译环境下会重新生成，重新编译发布的 APK 签名可能与旧版本不同。若安装时提示签名冲突，请先卸载旧版本再安装。
+
 ## 版本记录
 
 - **v1.1.0**：新增对 FlClash 的支持，客户端选项改为 CMFA / FlClash / 自定义三选一；修复标题栏遮挡界面的问题；发布的 APK 文件名不再包含版本号。
